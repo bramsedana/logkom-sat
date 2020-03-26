@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QPixmap
 
 ERROR_MSG = "ERROR"
 
@@ -24,7 +26,7 @@ class PyCalcUi(QMainWindow):
         super().__init__()
         # Set some main window's properties
         self.setWindowTitle("PyCalc")
-        self.setFixedSize(235, 235)
+        self.setFixedSize(400, 400)
         # Set the central widget and the general layout
         self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
@@ -51,31 +53,22 @@ class PyCalcUi(QMainWindow):
         buttonsLayout = QGridLayout()
         # Button text | position on the QGridLayout
         buttons = {
-            "7": (0, 0),
-            "8": (0, 1),
-            "9": (0, 2),
-            "/": (0, 3),
-            "C": (0, 4),
+            "1": (0, 0),
+            "2": (0, 1),
+            "3": (0, 2),
             "4": (1, 0),
             "5": (1, 1),
             "6": (1, 2),
-            "*": (1, 3),
-            "(": (1, 4),
-            "1": (2, 0),
-            "2": (2, 1),
-            "3": (2, 2),
-            "-": (2, 3),
-            ")": (2, 4),
-            "0": (3, 0),
-            "00": (3, 1),
-            ".": (3, 2),
-            "+": (3, 3),
-            "=": (3, 4),
+            "7": (2, 0),
+            "8": (2, 1),
+            "9": (2, 2),
         }
         # Create the buttons and add them to the grid layout
         for btnText, pos in buttons.items():
-            self.buttons[btnText] = QPushButton(btnText)
-            self.buttons[btnText].setFixedSize(40, 40)
+            self.buttons[btnText] = QPushButton("")
+            self.buttons[btnText].setFixedSize(60, 60)
+            self.buttons[btnText].setIcon(QIcon(QPixmap("assets/2-charmander.png")))
+            # self.buttons[btnText].setIconSize()
             buttonsLayout.addWidget(self.buttons[btnText], pos[0], pos[1])
         # Add buttonsLayout to the general layout
         self.generalLayout.addLayout(buttonsLayout)
@@ -135,9 +128,9 @@ class PyCalcCtrl:
             if btnText not in {"=", "C"}:
                 btn.clicked.connect(partial(self._buildExpression, btnText))
 
-        self._view.buttons["="].clicked.connect(self._calculateResult)
-        self._view.display.returnPressed.connect(self._calculateResult)
-        self._view.buttons["C"].clicked.connect(self._view.clearDisplay)
+        # self._view.buttons["="].clicked.connect(self._calculateResult)
+        # self._view.display.returnPressed.connect(self._calculateResult)
+        # self._view.buttons["C"].clicked.connect(self._view.clearDisplay)
 
 
 # Client code
