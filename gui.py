@@ -13,6 +13,10 @@ from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QPixmap
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import pyqtSlot
+
+from be.latin_square import *
 
 ERROR_MSG = "ERROR"
 
@@ -26,26 +30,82 @@ class PyCalcUi(QMainWindow):
         super().__init__()
         # Set some main window's properties
         self.setWindowTitle("PyCalc")
-        self.setFixedSize(400, 400)
+        self.setFixedSize(600, 600)
         # Set the central widget and the general layout
         self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
-        # Create the display and the buttons
-        self._createDisplay()
-        self._createButtons()
+        self.pushButton = QtWidgets.QPushButton(self._centralWidget)
 
-    def _createDisplay(self):
-        """Create the display."""
-        # Create the display widget
-        self.display = QLineEdit()
-        # Set some display's properties
-        self.display.setFixedHeight(35)
-        self.display.setAlignment(Qt.AlignRight)
-        self.display.setReadOnly(True)
-        # Add the display to the general layout
-        self.generalLayout.addWidget(self.display)
+        # Create the display and the buttons
+        # self._createDisplay()
+        self._createLabels()
+        self._takeinputs()
+        self._createButtons()
+        self._createBottomButtons()
+        self._createResultLabels()
+
+    @pyqtSlot()
+    def on_submit_click(self):
+        result = lat_square_sat([[1,2,3],[3,1,2],[2,3,1]])
+        print('PyQt5 button click submit')
+        print("Result from BE {}".format(result))
+        resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
+        self.resultLabel.setText(resultString)
+
+    @pyqtSlot()
+    def on_reset_click(self):
+        print('PyQt5 button click reset')
+        # TODO: Add reset
+
+    def _createResultLabels(self):
+        # Rules Label
+        self.resultLabel = QtWidgets.QLabel(self._centralWidget)
+        self.resultLabel.setGeometry(QtCore.QRect(475, 475, 200, 100))
+        self.resultLabel.setStyleSheet("color: red;" "font: bold 36px;")
+        self.resultLabel.setText("")
+
+    def _createBottomButtons(self):
+        submitButton = QPushButton('Submit', self)
+        submitButton.setToolTip('Submit your Latin Square')
+        submitButton.move(250,500)
+        submitButton.clicked.connect(self.on_submit_click)
+
+        resetButton = QPushButton('Reset', self)
+        resetButton.setToolTip('Reset your Latin Square')
+        resetButton.move(250,540)
+        resetButton.clicked.connect(self.on_reset_click)
+
+    def _createLabels(self):
+        # Upper Notice Label
+        self.noticeLabel = QtWidgets.QLabel(self._centralWidget)
+        self.noticeLabel.setGeometry(QtCore.QRect(20, 20, 400, 50))
+        # Keeping the text of label empty initially.
+        self.noticeLabel.setText("")
+
+        # Rules Label
+        self.ruleLabel = QtWidgets.QLabel(self._centralWidget)
+        self.ruleLabel.setGeometry(QtCore.QRect(20, 400, 500, 100))
+        self.ruleLabel.setText("Rules:\n1. You are only allowed to put the same Pokemon once in each Row or Column\n2. You must fill all boxes")
+
+    def _takeinputs(self):
+        # self.n is an int how many n chosen by user
+        self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (max 9)', max=9)
+        if done1:
+             self.noticeLabel.setText('Latin Square Succesfully Initialized with\nSize: ' + str(self.n))
+             self.pushButton.hide()
+
+    # def _createDisplay(self):
+    #     """Create the display."""
+    #     # Create the display widget
+    #     self.display = QLineEdit()
+    #     # Set some display's properties
+    #     self.display.setFixedHeight(35)
+    #     self.display.setAlignment(Qt.AlignRight)
+    #     self.display.setReadOnly(True)
+    #     # Add the display to the general layout
+    #     self.generalLayout.addWidget(self.display)
 
     def _createButtons(self):
         """Create the buttons."""
