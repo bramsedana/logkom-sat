@@ -23,7 +23,7 @@ def lat_square_sat(mat):
                 clause1.append(var1)
                 clause2.append(var2)
                 clause3.append(var3)
-                if val == z:
+                if val == z+1:
                     assumption.append(var1)
                 else:
                     assumption.append(-var1)
@@ -31,8 +31,8 @@ def lat_square_sat(mat):
             g.add_clause(clause1)
             g.add_clause(clause2)
             g.add_clause(clause3)
-
     return g.solve(assumptions=assumption)
 
-print(lat_square_sat([[1,2,3],[3,1,2],[2,3,1]]))
-print(lat_square_sat([[1,1,1],[1,1,1],[1,1,1]]))
+# Example to use
+# print(lat_square_sat([[1,2,3],[3,1,2],[2,3,1]]))
+# print(lat_square_sat([[1,1,1],[1,1,1],[1,1,1]]))
