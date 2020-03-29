@@ -57,6 +57,7 @@ class PyCalcUi(QMainWindow):
     @pyqtSlot()
     def on_reset_click(self):
         print('PyQt5 button click reset')
+        self.resultLabel.setText("")
         # TODO: Add reset
 
     def _createResultLabels(self):
