@@ -57,6 +57,7 @@ class LatinSquareUI(QMainWindow):
         print("Result from BE {}".format(result))
         resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
         self.resultLabel.setText(resultString)
+        self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;" if result else "color: red;" "font: bold 36px;")
 
     @pyqtSlot()
     def on_reset_click(self):
@@ -67,7 +68,6 @@ class LatinSquareUI(QMainWindow):
         # Rules Label
         self.resultLabel = QtWidgets.QLabel(self._centralWidget)
         self.resultLabel.setGeometry(QtCore.QRect(475, 475, 200, 100))
-        self.resultLabel.setStyleSheet("color: red;" "font: bold 36px;")
         self.resultLabel.setText("")
 
     def _createBottomButtons(self):
