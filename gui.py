@@ -27,7 +27,7 @@ class LatinSquareUI(QMainWindow):
         """View initializer."""
         super().__init__()
         # Set some main window's properties
-        self.setWindowTitle("PyCalc")
+        self.setWindowTitle("Latin Square Validator")
         self.setFixedSize(600, 600)
         # Set the central widget and the general layout
         self.generalLayout = QVBoxLayout()
@@ -84,7 +84,19 @@ class LatinSquareUI(QMainWindow):
     def _createLabels(self):
         # Upper Notice Label
         self.noticeLabel = QtWidgets.QLabel(self._centralWidget)
-        self.noticeLabel.setGeometry(QtCore.QRect(20, 20, 400, 50))
+        self.noticeLabel.setGeometry(QtCore.QRect(20,20, 400, 50))
+
+        # App Title Labels
+        self.titleLabel = QtWidgets.QLabel(self._centralWidget)
+        self.titleLabel.setGeometry(QtCore.QRect(100, 80, 400, 50))
+        self.titleLabel.setText("Welcome to Our App")
+        self.titleLabel.setStyleSheet("color: green;" "font: bold 42px;")
+
+        self.subTitleLabel = QtWidgets.QLabel(self._centralWidget)
+        self.subTitleLabel.setGeometry(QtCore.QRect(135, 130, 400, 50))
+        self.subTitleLabel.setText("Latin Square Validator")
+        self.subTitleLabel.setStyleSheet("color: red;" "font: bold 32px;")
+
         # Keeping the text of label empty initially.
         self.noticeLabel.setText("")
 
