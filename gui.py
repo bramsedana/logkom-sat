@@ -1,4 +1,4 @@
-import sys
+import sys, os
 
 from functools import partial
 
@@ -16,13 +16,12 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
-# from be.latin_square import *
+from be.latin_square import *
 
 ERROR_MSG = "ERROR"
 
-# Create a subclass of QMainWindow to setup the calculator's GUI
-class PyCalcUi(QMainWindow):
-    """PyCalc's View (GUI)."""
+class LatinSquareUI(QMainWindow):
+    """LatinSquare's View (GUI)."""
 
     def __init__(self):
         """View initializer."""
@@ -36,6 +35,7 @@ class PyCalcUi(QMainWindow):
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
         self.pushButton = QtWidgets.QPushButton(self._centralWidget)
+        self.userInput = [[None, None, None],[None, None, None],[None, None, None]]
 
         # Create the display and the buttons
         self._createLabels()
@@ -44,10 +44,15 @@ class PyCalcUi(QMainWindow):
         self._createBottomButtons()
         self._createResultLabels()
 
+    def on_box_click(self, label, input):
+        row = int(label) // 3
+        column = int(label) % 3
+        self.userInput[row][column] = input
+
     @pyqtSlot()
     def on_submit_click(self):
         # result = lat_square_sat([[1,2,3],[3,1,2],[2,3,1]])
-        result = True
+        result = lat_square_sat(self.userInput)
         print('PyQt5 button click submit')
         print("Result from BE {}".format(result))
         resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
@@ -56,8 +61,7 @@ class PyCalcUi(QMainWindow):
     @pyqtSlot()
     def on_reset_click(self):
         print('PyQt5 button click reset')
-        self.resultLabel.setText("")
-        # TODO: Add reset
+        os.execl(sys.executable, sys.executable, *sys.argv)
 
     def _createResultLabels(self):
         # Rules Label
@@ -102,15 +106,15 @@ class PyCalcUi(QMainWindow):
         buttonsLayout = QGridLayout()
         # Button text | position on the QGridLayout
         buttons = {
-            "1": (0, 0),
-            "2": (0, 1),
-            "3": (0, 2),
-            "4": (1, 0),
-            "5": (1, 1),
-            "6": (1, 2),
-            "7": (2, 0),
-            "8": (2, 1),
-            "9": (2, 2),
+            "0": (0, 0),
+            "1": (0, 1),
+            "2": (0, 2),
+            "3": (1, 0),
+            "4": (1, 1),
+            "5": (1, 2),
+            "6": (2, 0),
+            "7": (2, 1),
+            "8": (2, 2),
         }
         # Create the buttons and add them to the grid layout
         for btnText, pos in buttons.items():
@@ -123,8 +127,8 @@ class PyCalcUi(QMainWindow):
 
 
 # Create a Controller class to connect the GUI and the model
-class PyCalcCtrl:
-    """PyCalc's Controller."""
+class LatinSquareCtrl:
+    """LatinSquare's Controller."""
 
     def __init__(self, view):
         """Controller initializer."""
@@ -144,6 +148,8 @@ class PyCalcCtrl:
             elif self._counter == 3:
                 btn.setIcon(QIcon(QPixmap("assets/3-mudkip.png")))
 
+            self._view.on_box_click(btnText, self._counter)
+
             if self._counter == 3:
                 self._counter = 1
             else:
@@ -162,12 +168,13 @@ def main():
     """Main function."""
     # Create an instance of `QApplication`
     pycalc = QApplication(sys.argv)
-    # Show the calculator's GUI
-    view = PyCalcUi()
+
+    # Show the LatinSquare's GUI
+    view = LatinSquareUI()
     view.show()
+
     # Create instances of the model and the controller
-    PyCalcCtrl(view=view)
-    # Execute calculator's main loop
+    LatinSquareCtrl(view=view)
     sys.exit(pycalc.exec_())
 
 
