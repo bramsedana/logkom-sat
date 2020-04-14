@@ -25,6 +25,8 @@ python gui.py
 **Note: if on running the program there is an error saying a module is not found, please install the module manually by running:
 ```
 pip install <module_name>
+
+ex: pip install minisat
 ```
 ## Using the Application
 
