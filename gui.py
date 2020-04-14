@@ -72,7 +72,7 @@ class LatinSquareUI(QMainWindow):
     def _createResultLabels(self):
         # Rules Label
         self.resultLabel = QtWidgets.QLabel(self._centralWidget)
-        self.resultLabel.setGeometry(QtCore.QRect(475, 475, 200, 100))
+        self.resultLabel.setGeometry(QtCore.QRect(425, 475, 200, 100))
         self.resultLabel.setText("")
 
     def _createBottomButtons(self):
@@ -93,14 +93,14 @@ class LatinSquareUI(QMainWindow):
 
         # App Title Labels
         self.titleLabel = QtWidgets.QLabel(self._centralWidget)
-        self.titleLabel.setGeometry(QtCore.QRect(100, 80, 400, 50))
+        self.titleLabel.setGeometry(QtCore.QRect(125, 80, 400, 50))
         self.titleLabel.setText("Welcome to Our App")
-        self.titleLabel.setStyleSheet("color: green;" "font: bold 42px;")
+        self.titleLabel.setStyleSheet("color: green;" "font: bold 36px;")
 
         self.subTitleLabel = QtWidgets.QLabel(self._centralWidget)
-        self.subTitleLabel.setGeometry(QtCore.QRect(135, 130, 400, 50))
+        self.subTitleLabel.setGeometry(QtCore.QRect(155, 130, 400, 50))
         self.subTitleLabel.setText("Latin Square Validator")
-        self.subTitleLabel.setStyleSheet("color: red;" "font: bold 32px;")
+        self.subTitleLabel.setStyleSheet("color: red;" "font: bold 28px;")
 
         # Keeping the text of label empty initially.
         self.noticeLabel.setText("")
