@@ -52,12 +52,17 @@ class LatinSquareUI(QMainWindow):
     @pyqtSlot()
     def on_submit_click(self):
         # result = lat_square_sat([[1,2,3],[3,1,2],[2,3,1]])
-        result = lat_square_sat(self.userInput)
-        print('PyQt5 button click submit')
-        print("Result from BE {}".format(result))
-        resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
-        self.resultLabel.setText(resultString)
-        self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;" if result else "color: red;" "font: bold 36px;")
+        submit = True
+        for x in self.userInput:
+            if None in x:
+                submit = False
+        if submit:
+            result = lat_square_sat(self.userInput)
+            print('PyQt5 button click submit')
+            print("Result from BE {}".format(result))
+            resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
+            self.resultLabel.setText(resultString)
+            self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;" if result else "color: red;" "font: bold 36px;")
 
     @pyqtSlot()
     def on_reset_click(self):
