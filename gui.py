@@ -28,14 +28,13 @@ class LatinSquareUI(QMainWindow):
         super().__init__()
         # Set some main window's properties
         self.setWindowTitle("Latin Square Validator")
-        self.setFixedSize(600, 600)
+        self.setFixedSize(800, 800)
         # Set the central widget and the general layout
         self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
         self.pushButton = QtWidgets.QPushButton(self._centralWidget)
-        self.userInput = [[None, None, None],[None, None, None],[None, None, None]]
 
         # Create the display and the buttons
         self._createLabels()
@@ -45,8 +44,8 @@ class LatinSquareUI(QMainWindow):
         self._createResultLabels()
 
     def on_box_click(self, label, input):
-        row = int(label) // 3
-        column = int(label) % 3
+        row = int(label) // self.n
+        column = int(label) % self.n
         self.userInput[row][column] = input
 
     @pyqtSlot()
@@ -72,18 +71,18 @@ class LatinSquareUI(QMainWindow):
     def _createResultLabels(self):
         # Rules Label
         self.resultLabel = QtWidgets.QLabel(self._centralWidget)
-        self.resultLabel.setGeometry(QtCore.QRect(425, 475, 200, 100))
+        self.resultLabel.setGeometry(QtCore.QRect(625, 675, 200, 100))
         self.resultLabel.setText("")
 
     def _createBottomButtons(self):
         submitButton = QPushButton('Submit', self)
         submitButton.setToolTip('Submit your Latin Square')
-        submitButton.move(250,500)
+        submitButton.move(350,710)
         submitButton.clicked.connect(self.on_submit_click)
 
         resetButton = QPushButton('Reset', self)
         resetButton.setToolTip('Reset your Latin Square')
-        resetButton.move(250,540)
+        resetButton.move(350,750)
         resetButton.clicked.connect(self.on_reset_click)
 
     def _createLabels(self):
@@ -91,27 +90,12 @@ class LatinSquareUI(QMainWindow):
         self.noticeLabel = QtWidgets.QLabel(self._centralWidget)
         self.noticeLabel.setGeometry(QtCore.QRect(20,20, 400, 50))
 
-        # App Title Labels
-        self.titleLabel = QtWidgets.QLabel(self._centralWidget)
-        self.titleLabel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.titleLabel.setAlignment(Qt.AlignCenter)
-        self.titleLabel.setGeometry(QtCore.QRect(100, 80, 400, 50))
-        self.titleLabel.setText("Welcome to Our App")
-        self.titleLabel.setStyleSheet("color: green;" "font: bold 32px;")
-
-        self.subTitleLabel = QtWidgets.QLabel(self._centralWidget)
-        self.subTitleLabel.setGeometry(QtCore.QRect(100, 130, 400, 50))
-        self.subTitleLabel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.subTitleLabel.setAlignment(Qt.AlignCenter)
-        self.subTitleLabel.setText("Latin Square Validator")
-        self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
-
         # Keeping the text of label empty initially.
         self.noticeLabel.setText("")
 
         # Rules Label
         self.ruleLabel = QtWidgets.QLabel(self._centralWidget)
-        self.ruleLabel.setGeometry(QtCore.QRect(20, 400, 500, 100))
+        self.ruleLabel.setGeometry(QtCore.QRect(20, 640, 700, 100))
         self.ruleLabel.setText("Rules:\n1. You are only allowed to put the same Pokemon once in each Row or Column\n2. You must fill all boxes")
 
     def _takeinputs(self):
@@ -119,6 +103,7 @@ class LatinSquareUI(QMainWindow):
         self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (max 9)', max=9)
         if done1:
             self.noticeLabel.setText(f'Latin Square Succesfully Initialized with\nSize: {self.n}')
+            self.userInput = [[None] * self.n] * self.n
             self.pushButton.hide()
 
     def _createButtons(self):
