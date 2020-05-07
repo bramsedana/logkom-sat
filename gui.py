@@ -126,17 +126,11 @@ class LatinSquareUI(QMainWindow):
         self.buttons = {}
         buttonsLayout = QGridLayout()
         # Button text | position on the QGridLayout
-        buttons = {
-            "0": (0, 0),
-            "1": (0, 1),
-            "2": (0, 2),
-            "3": (1, 0),
-            "4": (1, 1),
-            "5": (1, 2),
-            "6": (2, 0),
-            "7": (2, 1),
-            "8": (2, 2),
-        }
+        buttons = {}
+        for n in range(self.n**2):
+            buttons[n] = (0,0) if n==0 else (n // self.n, n % self.n)
+            # print('{} : ({},{})'.format(n, n // self.n, n % self.n))
+
         # Create the buttons and add them to the grid layout
         for btnText, pos in buttons.items():
             self.buttons[btnText] = QPushButton("")
