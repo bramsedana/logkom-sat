@@ -16,7 +16,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
-# from be.latin_square import *
+from be.latin_square import *
 
 ERROR_MSG = "ERROR"
 
@@ -35,7 +35,6 @@ class LatinSquareUI(QMainWindow):
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
         self.pushButton = QtWidgets.QPushButton(self._centralWidget)
-        self.userInput = [[None, None, None],[None, None, None],[None, None, None]]
 
         # Create the display and the buttons
         self._createLabels()
@@ -45,19 +44,19 @@ class LatinSquareUI(QMainWindow):
         self._createResultLabels()
 
     def on_box_click(self, label, input):
-        row = int(label) // 3
-        column = int(label) % 3
+        row = label // self.n
+        column = label % self.n
         self.userInput[row][column] = input
 
     @pyqtSlot()
     def on_submit_click(self):
-        # result = lat_square_sat([[1,2,3],[3,1,2],[2,3,1]])
+        result = lat_square_sat([[1,2,3],[3,1,2],[2,3,1]])
         submit = True
         for x in self.userInput:
             if None in x:
                 submit = False
         if submit:
-            # result = lat_square_sat(self.userInput)
+            result = lat_square_sat(self.userInput)
             print('PyQt5 button click submit')
             print("Result from BE {}".format(result))
             resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
@@ -120,6 +119,7 @@ class LatinSquareUI(QMainWindow):
         if done1:
             self.noticeLabel.setText(f'Latin Square Succesfully Initialized with\nSize: {self.n}')
             self.pushButton.hide()
+            self.userInput = [[None]*self.n for i in range(self.n)]
 
     def _createButtons(self):
         """Create the buttons."""
@@ -160,7 +160,7 @@ class LatinSquareCtrl:
 
             self._view.on_box_click(btnText, self._counter)
 
-            if self._counter == self.n:
+            if self._counter == self._view.n:
                 self._counter = 1
             else:
                 self._counter += 1
