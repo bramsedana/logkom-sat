@@ -16,7 +16,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
-from be.latin_square import *
+# from be.latin_square import *
 
 ERROR_MSG = "ERROR"
 
@@ -57,7 +57,7 @@ class LatinSquareUI(QMainWindow):
             if None in x:
                 submit = False
         if submit:
-            result = lat_square_sat(self.userInput)
+            # result = lat_square_sat(self.userInput)
             print('PyQt5 button click submit')
             print("Result from BE {}".format(result))
             resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
@@ -156,16 +156,11 @@ class LatinSquareCtrl:
     def _changeIcon(self, btn, btnText):
         """Change image of button."""
         if btnText not in self._pushedBtn:
-            if self._counter == 1:
-                btn.setIcon(QIcon(QPixmap("assets/1-turtwig.png")))
-            elif self._counter == 2:
-                btn.setIcon(QIcon(QPixmap("assets/2-charmander.png")))
-            elif self._counter == 3:
-                btn.setIcon(QIcon(QPixmap("assets/3-mudkip.png")))
+            btn.setIcon(QIcon(QPixmap("assets/{}.png".format(self._counter))))
 
             self._view.on_box_click(btnText, self._counter)
 
-            if self._counter == 3:
+            if self._counter == self.n:
                 self._counter = 1
             else:
                 self._counter += 1
