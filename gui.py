@@ -16,7 +16,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
-# from be.latin_square import *
+from be.latin_square import *
 
 ERROR_MSG = "ERROR"
 
@@ -44,19 +44,23 @@ class LatinSquareUI(QMainWindow):
         self._createResultLabels()
 
     def on_box_click(self, label, input):
+        print(f"label {label} input {input}")
         row = label // self.n
         column = label % self.n
+        print(f"row {row} column {column}")
+        print(f"before assignment {self.userInput}")
         self.userInput[row][column] = input
+        print(f"after assignment {self.userInput}")
 
     @pyqtSlot()
     def on_submit_click(self):
-        # result = lat_square_sat([[1,2,3],[3,1,2],[2,3,1]])
         submit = True
         for x in self.userInput:
             if None in x:
                 submit = False
         if submit:
-            # result = lat_square_sat(self.userInput)
+            print(self.userInput)
+            result = lat_square_sat(self.userInput)
             print('PyQt5 button click submit')
             print("Result from BE {}".format(result))
             resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
@@ -103,7 +107,7 @@ class LatinSquareUI(QMainWindow):
         self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (max 9)', max=9)
         if done1:
             self.noticeLabel.setText(f'Latin Square Succesfully Initialized with\nSize: {self.n}')
-            self.userInput = [[None] * self.n] * self.n
+            self.userInput = [[None] * self.n for i in range(self.n)]
             self.pushButton.hide()
 
     def _createButtons(self):
@@ -142,6 +146,7 @@ class LatinSquareCtrl:
         """Change image of button."""
         if btnText not in self._pushedBtn:
             btn.setIcon(QIcon(QPixmap("assets/{}.png".format(self._counter))))
+            btn.setIconSize(QtCore.QSize(50,50))
 
             self._view.on_box_click(btnText, self._counter)
 
