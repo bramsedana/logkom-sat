@@ -116,10 +116,10 @@ class LatinSquareUI(QMainWindow):
 
     def _takeinputs(self):
         # self.n is an int how many n chosen by user
-        # self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (max 9)', max=9)
-        # if done1:
-         self.noticeLabel.setText('Latin Square Succesfully Initialized with\nSize: 3')
-         self.pushButton.hide()
+        self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (max 9)', max=9)
+        if done1:
+            self.noticeLabel.setText(f'Latin Square Succesfully Initialized with\nSize: {self.n}')
+            self.pushButton.hide()
 
     def _createButtons(self):
         """Create the buttons."""
