@@ -23,6 +23,8 @@ def lat_square_sat(mat):
                 clause1.append(var1)
                 clause2.append(var2)
                 clause3.append(var3)
+                if val == 0:
+                    continue
                 if val == z+1:
                     assumption.append(var1)
                 else:
