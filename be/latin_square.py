@@ -30,9 +30,25 @@ def lat_square_sat(mat):
                 else:
                     assumption.append(-var1)
 
+            clause4 = []
+            clause5 = []
+            for a in range(size-1):
+                for b in range(a+1, size):
+                    var1 = construct_var(a,x,y)
+                    var2 = construct_var(b,x,y)
+                    var3 = construct_var(x,a,y)
+                    var4 = construct_var(x,b,y)
+
+                    clause1.append(-var1)
+                    clause1.append(-var2)
+                    clause2.append(-var3)
+                    clause2.append(-var4)
+
             g.add_clause(clause1)
             g.add_clause(clause2)
             g.add_clause(clause3)
+            g.add_clause(clause4)
+            g.add_clause(clause5)
     return g.solve(assumptions=assumption)
 
 # Example to use
