@@ -16,10 +16,11 @@ def lat_square_sat(mat):
             clause1 = []
             clause2 = []
             for z in range(size):
-                var1 = construct_var(x, z, y)
-                var2 = construct_var(z, x, y)
-                clause1.append(var1)
-                clause2.append(var2)
+                var1 = construct_var(x, y, z)
+                var2 = construct_var(x, z, y)
+                var3 = construct_var(z, x, y)
+                clause1.append(var2)
+                clause2.append(var3)
                 if val == 0:
                     continue
                 if val == z+1:
