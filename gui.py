@@ -90,6 +90,7 @@ class LatinSquareUI(QMainWindow):
             self.titleLabel.setStyleSheet("color: green;" "font: bold 32px;")
             self.subTitleLabel.setText(resultString)
             self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
+            QtWidgets.qApp.processEvents()
             dlg = CustomDialog(False)
             if dlg.exec_():
                 on_reset_click()
@@ -104,6 +105,7 @@ class LatinSquareUI(QMainWindow):
             self.titleLabel.setStyleSheet("color: green;" "font: bold 32px;")
             self.subTitleLabel.setText(resultString)
             self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
+            QtWidgets.qApp.processEvents()
             dlg = CustomDialog(True)
             if dlg.exec_():
                 on_reset_click()
