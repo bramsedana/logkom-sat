@@ -32,7 +32,7 @@ class CustomDialog(QtWidgets.QDialog):
         self.buttonBox = QtWidgets.QPushButton("Close")
         self.buttonBox.clicked.connect(lambda : self.close())
 
-        self.resultText = QtWidgets.QLabel("YOU WIN!" if isWin else "YOU LOSE!:(")
+        self.resultText = QtWidgets.QLabel("DRAW!" if isWin else "YOU LOSE!:(")
         self.resultText.setStyleSheet("font: bold 36px;")
 
         self.layout = QVBoxLayout()
@@ -62,7 +62,7 @@ class LatinSquareUI(QMainWindow):
         self._takeinputs()
         self._createButtons()
         self._createBottomButtons()
-        self._createResultLabels()
+        # self._createResultLabels()
 
     def on_box_click(self, label, input):
 
@@ -79,14 +79,17 @@ class LatinSquareUI(QMainWindow):
             if 0 in x:
                 done = False
 
+        QtWidgets.qApp.processEvents()
         # Adding submission per click
         result = lat_square_sat(self.userInput)
         print('PyQt5 input button click')
         print("Result from BE {}".format(result))
         if not result:
-            resultString = "Player 1\nWINS" if self.player == 2 else "Player 2\nWINS"
-            self.resultLabel.setText(resultString)
-            self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;")
+            resultString = "Player 1 WINS" if self.player == 2 else "Player 2 WINS"
+            self.titleLabel.setText("Congratulations!")
+            self.titleLabel.setStyleSheet("color: green;" "font: bold 32px;")
+            self.subTitleLabel.setText(resultString)
+            self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
             dlg = CustomDialog(False)
             if dlg.exec_():
                 on_reset_click()
@@ -96,9 +99,11 @@ class LatinSquareUI(QMainWindow):
 
         print(f"done {done}")
         if done:
-            resultString = "Player {}\nWINS".format(self.player)
-            self.resultLabel.setText(resultString)
-            self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;")
+            resultString = "DRAW!"
+            self.titleLabel.setText("Congratulations!")
+            self.titleLabel.setStyleSheet("color: green;" "font: bold 32px;")
+            self.subTitleLabel.setText(resultString)
+            self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
             dlg = CustomDialog(True)
             if dlg.exec_():
                 on_reset_click()
@@ -126,11 +131,11 @@ class LatinSquareUI(QMainWindow):
         print('PyQt5 button click reset')
         os.execl(sys.executable, sys.executable, *sys.argv)
 
-    def _createResultLabels(self):
-        # Rules Label
-        self.resultLabel = QtWidgets.QLabel(self._centralWidget)
-        self.resultLabel.setGeometry(QtCore.QRect(600, 675, 200, 100))
-        self.resultLabel.setText("")
+    # def _createResultLabels(self):
+    #     # Rules Label
+    #     self.resultLabel = QtWidgets.QLabel(self._centralWidget)
+    #     self.resultLabel.setGeometry(QtCore.QRect(600, 675, 200, 100))
+    #     self.resultLabel.setText("")
 
     def _createBottomButtons(self):
         # submitButton = QPushButton('Submit', self)
@@ -144,6 +149,21 @@ class LatinSquareUI(QMainWindow):
         resetButton.clicked.connect(self.on_reset_click)
 
     def _createLabels(self):
+
+        self.titleLabel = QtWidgets.QLabel(self._centralWidget)
+        self.titleLabel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.titleLabel.setAlignment(Qt.AlignCenter)
+        self.titleLabel.setGeometry(QtCore.QRect(200, 80, 400, 50))
+        self.titleLabel.setText("Current Player:")
+        self.titleLabel.setStyleSheet("color: green;" "font: bold 32px;")
+
+        self.subTitleLabel = QtWidgets.QLabel(self._centralWidget)
+        self.subTitleLabel.setGeometry(QtCore.QRect(200, 110, 400, 50))
+        self.subTitleLabel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.subTitleLabel.setAlignment(Qt.AlignCenter)
+        self.subTitleLabel.setText(f"Player {self.player}")
+        self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
+
         # Upper Notice Label
         self.noticeLabel = QtWidgets.QLabel(self._centralWidget)
         self.noticeLabel.setGeometry(QtCore.QRect(20,20, 400, 50))
@@ -205,8 +225,10 @@ class LatinSquareCtrl:
         if btnText not in self._pushedBtn:
             btn.setIcon(QIcon(QPixmap("assets/{}.png".format(self._counter))))
             btn.setIconSize(QtCore.QSize(50,50))
+            QtWidgets.qApp.processEvents()
 
             self._view.on_box_click(btnText, self._counter)
+            QtWidgets.qApp.processEvents()
 
             if self._counter == self._view.n:
                 self._counter = 1
@@ -214,8 +236,11 @@ class LatinSquareCtrl:
                 self._counter += 1
 
             self._view.player = 2 if self._view.player == 1 else 1
+            self._view.subTitleLabel.setText(f"Player {self._view.player}")
+            self._view.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
 
             self._pushedBtn.append(btnText)
+            QtWidgets.qApp.processEvents()
 
     def _connectSignals(self):
         """Connect signals and slots."""
