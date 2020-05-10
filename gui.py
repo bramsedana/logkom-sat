@@ -35,6 +35,7 @@ class LatinSquareUI(QMainWindow):
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
         self.pushButton = QtWidgets.QPushButton(self._centralWidget)
+        self.player = 1
 
         # Create the display and the buttons
         self._createLabels()
@@ -63,9 +64,14 @@ class LatinSquareUI(QMainWindow):
             result = lat_square_sat(self.userInput)
             print('PyQt5 button click submit')
             print("Result from BE {}".format(result))
-            resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
+
+            if result:
+                resultString = "Player {}\nWINS".format(self.player)
+            else:
+                resultString = "Player 1\nWINS" if self.player == 2 else "Player 2\nWINS"
+
             self.resultLabel.setText(resultString)
-            self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;" if result else "color: red;" "font: bold 36px;")
+            self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;")
 
     @pyqtSlot()
     def on_reset_click(self):
@@ -154,6 +160,8 @@ class LatinSquareCtrl:
                 self._counter = 1
             else:
                 self._counter += 1
+
+            self._view.player = 1 if self._view.player == 2 else 2
 
             self._pushedBtn.append(btnText)
 
