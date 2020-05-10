@@ -20,6 +20,26 @@ from be.latin_square import *
 
 ERROR_MSG = "ERROR"
 
+class CustomDialog(QtWidgets.QDialog):
+
+    def __init__(self, isWin):
+        super().__init__()
+
+        self.setWindowTitle("GAME OVER!")
+
+        # QBtn = QtWidgets.QPushButton("Close")
+
+        self.buttonBox = QtWidgets.QPushButton("Close")
+        self.buttonBox.clicked.connect(lambda : self.close())
+
+        self.resultText = QtWidgets.QLabel("YOU WIN!" if isWin else "YOU LOSE!:(")
+        self.resultText.setStyleSheet("font: bold 36px;")
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.resultText)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+
 class LatinSquareUI(QMainWindow):
     """LatinSquare's View (GUI)."""
 
@@ -45,6 +65,7 @@ class LatinSquareUI(QMainWindow):
         self._createResultLabels()
 
     def on_box_click(self, label, input):
+
         print(f"label {label} input {input}")
         row = label // self.n
         column = label % self.n
@@ -53,25 +74,52 @@ class LatinSquareUI(QMainWindow):
         self.userInput[row][column] = input
         print(f"after assignment {self.userInput}")
 
-    @pyqtSlot()
-    def on_submit_click(self):
-        submit = True
+        done = True
         for x in self.userInput:
-            if None in x:
-                submit = False
-        if submit:
-            print(self.userInput)
-            result = lat_square_sat(self.userInput)
-            print('PyQt5 button click submit')
-            print("Result from BE {}".format(result))
+            if 0 in x:
+                done = False
 
-            if result:
-                resultString = "Player {}\nWINS".format(self.player)
-            else:
-                resultString = "Player 1\nWINS" if self.player == 2 else "Player 2\nWINS"
-
+        # Adding submission per click
+        result = lat_square_sat(self.userInput)
+        print('PyQt5 input button click')
+        print("Result from BE {}".format(result))
+        if not result:
+            resultString = "Player 1\nWINS" if self.player == 2 else "Player 2\nWINS"
             self.resultLabel.setText(resultString)
             self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;")
+            dlg = CustomDialog(False)
+            if dlg.exec_():
+                on_reset_click()
+                print("Success!")
+            else:
+                print("Cancel!")
+
+        print(f"done {done}")
+        if done:
+            resultString = "Player {}\nWINS".format(self.player)
+            self.resultLabel.setText(resultString)
+            self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;")
+            dlg = CustomDialog(True)
+            if dlg.exec_():
+                on_reset_click()
+                print("Success!")
+            else:
+                print("Cancel!")
+
+    # @pyqtSlot()
+    # def on_submit_click(self):
+    #     submit = True
+    #     for x in self.userInput:
+    #         if None in x:
+    #             submit = False
+    #     if submit:
+    #         print(self.userInput)
+    #         result = lat_square_sat(self.userInput)
+    #         print('PyQt5 button click submit')
+    #         print("Result from BE {}".format(result))
+    #         resultString = "YOU \nWIN" if result else "YOU \nLOSE:("
+    #         self.resultLabel.setText(resultString)
+    #         self.resultLabel.setStyleSheet("color: green;" "font: bold 36px;" if result else "color: red;" "font: bold 36px;")
 
     @pyqtSlot()
     def on_reset_click(self):
@@ -81,18 +129,18 @@ class LatinSquareUI(QMainWindow):
     def _createResultLabels(self):
         # Rules Label
         self.resultLabel = QtWidgets.QLabel(self._centralWidget)
-        self.resultLabel.setGeometry(QtCore.QRect(625, 675, 200, 100))
+        self.resultLabel.setGeometry(QtCore.QRect(600, 675, 200, 100))
         self.resultLabel.setText("")
 
     def _createBottomButtons(self):
-        submitButton = QPushButton('Submit', self)
-        submitButton.setToolTip('Submit your Latin Square')
-        submitButton.move(350,710)
-        submitButton.clicked.connect(self.on_submit_click)
+        # submitButton = QPushButton('Submit', self)
+        # submitButton.setToolTip('Submit your Latin Square')
+        # submitButton.move(350,710)
+        # submitButton.clicked.connect(self.on_submit_click)
 
         resetButton = QPushButton('Reset', self)
         resetButton.setToolTip('Reset your Latin Square')
-        resetButton.move(350,750)
+        resetButton.move(350,730)
         resetButton.clicked.connect(self.on_reset_click)
 
     def _createLabels(self):
@@ -110,11 +158,15 @@ class LatinSquareUI(QMainWindow):
 
     def _takeinputs(self):
         # self.n is an int how many n chosen by user
-        self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (max 9)', max=9)
-        if done1:
+        self.n, done1 = QtWidgets.QInputDialog.getInt(self, 'Input Dialog', 'Enter your Latin Square n: (even only, max 8)', max=8, min=2)
+        if done1 and self.n % 2 == 0 and self.n != 0:
             self.noticeLabel.setText(f'Latin Square Succesfully Initialized with\nSize: {self.n}')
-            self.userInput = [[None] * self.n for i in range(self.n)]
+            self.userInput = [[0] * self.n for i in range(self.n)]
             self.pushButton.hide()
+        elif self.n % 2 != 0:
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        else:
+            sys.exit()
 
     def _createButtons(self):
         """Create the buttons."""
@@ -161,7 +213,7 @@ class LatinSquareCtrl:
             else:
                 self._counter += 1
 
-            self._view.player = 1 if self._view.player == 2 else 2
+            self._view.player = 2 if self._view.player == 1 else 1
 
             self._pushedBtn.append(btnText)
 
