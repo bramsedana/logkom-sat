@@ -64,6 +64,10 @@ class LatinSquareUI(QMainWindow):
         self._createBottomButtons()
         # self._createResultLabels()
 
+    def disconnect_buttons(self):
+        for btnText, btn in self.buttons.items():
+            btn.clicked.disconnect()
+
     def on_box_click(self, label, input):
 
         print(f"label {label} input {input}")
@@ -91,6 +95,7 @@ class LatinSquareUI(QMainWindow):
             self.subTitleLabel.setText(resultString)
             self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
             QtWidgets.qApp.processEvents()
+            self.disconnect_buttons()
             dlg = CustomDialog(False)
             if dlg.exec_():
                 on_reset_click()
@@ -106,6 +111,7 @@ class LatinSquareUI(QMainWindow):
             self.subTitleLabel.setText(resultString)
             self.subTitleLabel.setStyleSheet("color: red;" "font: bold 24px;")
             QtWidgets.qApp.processEvents()
+            self.disconnect_buttons()
             dlg = CustomDialog(True)
             if dlg.exec_():
                 on_reset_click()
