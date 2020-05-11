@@ -70,13 +70,9 @@ class LatinSquareUI(QMainWindow):
 
     def on_box_click(self, label, input):
 
-        print(f"label {label} input {input}")
         row = label // self.n
         column = label % self.n
-        print(f"row {row} column {column}")
-        print(f"before assignment {self.userInput}")
         self.userInput[row][column] = input
-        print(f"after assignment {self.userInput}")
 
         done = True
         for x in self.userInput:
@@ -86,8 +82,6 @@ class LatinSquareUI(QMainWindow):
         QtWidgets.qApp.processEvents()
         # Adding submission per click
         result = lat_square_sat(self.userInput)
-        print('PyQt5 input button click')
-        print("Result from BE {}".format(result))
         if not result:
             resultString = "Player 1 WINS" if self.player == 2 else "Player 2 WINS"
             self.titleLabel.setText("Congratulations!")
@@ -101,9 +95,8 @@ class LatinSquareUI(QMainWindow):
                 on_reset_click()
                 print("Success!")
             else:
-                print("Cancel!")
+                print("Result")
 
-        print(f"done {done}")
         if done:
             resultString = "DRAW!"
             self.titleLabel.setText("Congratulations!")
@@ -117,7 +110,7 @@ class LatinSquareUI(QMainWindow):
                 on_reset_click()
                 print("Success!")
             else:
-                print("Cancel!")
+                print("Result")
 
     # @pyqtSlot()
     # def on_submit_click(self):
@@ -136,7 +129,6 @@ class LatinSquareUI(QMainWindow):
 
     @pyqtSlot()
     def on_reset_click(self):
-        print('PyQt5 button click reset')
         os.execl(sys.executable, sys.executable, *sys.argv)
 
     # def _createResultLabels(self):
@@ -204,7 +196,6 @@ class LatinSquareUI(QMainWindow):
         buttons = {}
         for n in range(self.n**2):
             buttons[n] = (0,0) if n==0 else (n // self.n, n % self.n)
-            # print('{} : ({},{})'.format(n, n // self.n, n % self.n))
 
         # Create the buttons and add them to the grid layout
         for btnText, pos in buttons.items():
