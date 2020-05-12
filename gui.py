@@ -32,7 +32,7 @@ class CustomDialog(QtWidgets.QDialog):
         self.buttonBox = QtWidgets.QPushButton("Close")
         self.buttonBox.clicked.connect(lambda : self.close())
 
-        self.resultText = QtWidgets.QLabel("DRAW!" if isWin else "YOU LOSE!:(")
+        self.resultText = QtWidgets.QLabel("DRAW!" if isWin else "GAME OVER!")
         self.resultText.setStyleSheet("font: bold 36px;")
 
         self.layout = QVBoxLayout()
